@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: python-frontend-service
+  name: python-frontend-service
+spec:
+  ports:
+  - port: 60000
+    protocol: TCP
+    targetPort: 60000
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.
+    nodePort: 60000
+  selector:
+    app: python-frontend-service
+  type: NodePort
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: python-frontend-service
+  name: python-frontend-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-frontend-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: python-frontend-service
+    spec:
+      containers:
+      - args:
+        - python-frontend-service
+        image: python-frontend-service
+        name: python-frontend-service
+        ports:
+        - containerPort: 60000
+        imagePullPolicy: Never
+        envFrom:
+          - configMapRef:
+              name: envs-config
+        resources: {}
+status: {}

@@ -14,7 +14,7 @@ JAVA_SERVICE_PORT = os.getenv("JAVA_SERVICE_PORT","60001")
 
 KAFKA_SERVICE_HOST = os.getenv("KAFKA_SERVICE_HOST","0.0.0.0")
 KAFKA_SERVICE_PORT = os.getenv("KAFKA_SERVICE_PORT","9092")
-KAFKA_SERVICE_TOPIC = os.getenv("KAFKA_SERVICE_TOPIC","first_topic")
+KAFKA_SERVICE_TOPIC = os.getenv("KAFKA_SERVICE_TOPIC","test")
 
 app = Flask(__name__)
 

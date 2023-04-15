@@ -1,0 +1,13 @@
+apiVersion: v1
+metadata:
+  name: envs-config
+data:
+  PYTHON_SERVICE_HOST: python-frontend-service
+  PYTHON_SERVICE_PORT: "60000"
+  JAVA_SERVICE_HOST: java-service
+  JAVA_SERVICE_PORT: "60001"
+  KAFKA_SERVICE_HOST: kafka-service
+  KAFKA_SERVICE_PORT: "9092"
+  KAFKA_SERVICE_TOPIC: test
+
+kind: ConfigMap

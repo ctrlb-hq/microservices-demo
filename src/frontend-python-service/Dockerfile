@@ -16,6 +16,6 @@ RUN chmod -R 0644 /app
 WORKDIR /app/
 ENV PYTHONPATH=${PYTHONPATH}:.
 
-EXPOSE 8000
+EXPOSE 60000
 
 ENTRYPOINT ["python", "main.py"]
