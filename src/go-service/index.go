@@ -24,8 +24,8 @@ var DBObj *gorm.DB
 func main() {
 	port := getEnv("GO_SERVICE_PORT", "60002")
 	dbHost := getEnv("DB_SERVICE_HOST", "localhost")
-	dbUserName := getEnv("DB_SERVICE_USERNAME", "postgres")
-	dbPassowrd := getEnv("DB_SERVICE_PASSOWRD", "mysecretpassword")
+	dbUserName := getEnv("POSTGRES_USER", "postgres")
+	dbPassowrd := getEnv("POSTGRES_PASSWORD", "mysecretpassword")
 	dbName := getEnv("DB_SERVICE_NAME", "numbers")
 	dbPort := getEnv("DB_SERVICE_PORT", "5432")
 
@@ -35,7 +35,7 @@ func main() {
 
 	DBObj = db.SetupDB(dbHost, dbUserName, dbPassowrd, dbName, dbPort)
 
-	fmt.Println("Server at 3099")
+	fmt.Println("Server at "+GO_SERVICE_PORT)
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 

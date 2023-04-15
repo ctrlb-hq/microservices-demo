@@ -7,6 +7,6 @@ RUN go mod download
 
 RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go-svc
 
-EXPOSE 3099
+EXPOSE 60002
 
 CMD ["/go-svc"]
