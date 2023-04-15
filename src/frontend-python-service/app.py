@@ -6,11 +6,11 @@ import uuid
 import requests
 
 PYTHON_SERVICE_HOST = os.getenv("PYTHON_SERVICE_HOST","0.0.0.0")
-PYTHON_SERVICE_PORT = os.getenv("PYTHON_SERVICE_PORT","60000")
+PYTHON_SERVICE_PORT = os.getenv("PYTHON_SERVICE_PORT","30000")
 
 
 JAVA_SERVICE_HOST = os.getenv("JAVA_SERVICE_HOST","0.0.0.0")
-JAVA_SERVICE_PORT = os.getenv("JAVA_SERVICE_PORT","60001")
+JAVA_SERVICE_PORT = os.getenv("JAVA_SERVICE_PORT","30001")
 
 KAFKA_SERVICE_HOST = os.getenv("KAFKA_SERVICE_HOST","0.0.0.0")
 KAFKA_SERVICE_PORT = os.getenv("KAFKA_SERVICE_PORT","9092")
@@ -21,7 +21,7 @@ app = Flask(__name__)
 from kafka import KafkaProducer
 producer = KafkaProducer(
     bootstrap_servers=[f"{KAFKA_SERVICE_HOST}:{KAFKA_SERVICE_PORT}"],
-    value_serializer=lambda x: dumps(x).encode('utf-8')
+    value_serializer=lambda x: str(x).encode('utf-8')
 )
 
 """
@@ -41,7 +41,7 @@ This function calls the Java service endpoint /numbers with uuid parameter as ob
 Then prints the result.
 """
 @app.route('/getResult')
-def result:
+def result():
     uid = request.args.get('uuid')
     PARAMS = {'uuid':uid}
 

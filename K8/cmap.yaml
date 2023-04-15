@@ -2,13 +2,14 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: envs-config
+  namespace: atlas
 data:
   PYTHON_SERVICE_HOST: python-frontend-service
-  PYTHON_SERVICE_PORT: "60000"
+  PYTHON_SERVICE_PORT: "30000"
   JAVA_SERVICE_HOST: java-service
-  JAVA_SERVICE_PORT: "60001"
+  JAVA_SERVICE_PORT: "30001"
   GO_SERVICE_HOST: go-service
-  GO_SERVICE_PORT: "60002"
+  GO_SERVICE_PORT: "30002"
   DB_SERVICE_HOST: db-service
   DB_SERVICE_PORT: "5042"
   KAFKA_SERVICE_HOST: kafka-service

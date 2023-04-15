@@ -4,14 +4,15 @@ metadata:
   labels:
     app: java-service
   name: java-service
+  namespace: atlas
 spec:
   ports:
-  - port: 60001
+  - port: 30001
     protocol: TCP
-    targetPort: 60001
+    targetPort: 30001
     # If you set the `spec.type` field to `NodePort` and you want a specific port number,
     # you can specify a value in the `spec.ports[*].nodePort` field.
-    nodePort: 60001
+    nodePort: 30001
   selector:
     app: java-service
   type: NodePort
@@ -24,6 +25,7 @@ metadata:
   labels:
     app: java-service
   name: java-service
+  namespace: atlas
 spec:
   replicas: 1
   selector:
@@ -41,7 +43,7 @@ spec:
         image: java-service
         name: java-service
         ports:
-        - containerPort: 60001
+        - containerPort: 30001
         imagePullPolicy: Never
         envFrom:
           - configMapRef:

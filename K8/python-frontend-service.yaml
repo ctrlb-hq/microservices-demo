@@ -4,14 +4,15 @@ metadata:
   labels:
     app: python-frontend-service
   name: python-frontend-service
+  namespace: atlas
 spec:
   ports:
-  - port: 60000
+  - port: 30000
     protocol: TCP
-    targetPort: 60000
+    targetPort: 30000
     # If you set the `spec.type` field to `NodePort` and you want a specific port number,
     # you can specify a value in the `spec.ports[*].nodePort` field.
-    nodePort: 60000
+    nodePort: 30000
   selector:
     app: python-frontend-service
   type: NodePort
@@ -24,6 +25,7 @@ metadata:
   labels:
     app: python-frontend-service
   name: python-frontend-service
+  namespace: atlas
 spec:
   replicas: 1
   selector:
@@ -38,11 +40,11 @@ spec:
       containers:
       - args:
         - python-frontend-service
-        image: python-frontend-service
+        image: dev0zklabs/atlas-demo-microservice:python-frontend-service
         name: python-frontend-service
         ports:
-        - containerPort: 60000
-        imagePullPolicy: Never
+        - containerPort: 30000
+        imagePullPolicy: IfNotPresent
         envFrom:
           - configMapRef:
               name: envs-config

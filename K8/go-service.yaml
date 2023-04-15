@@ -4,14 +4,15 @@ metadata:
   labels:
     app: go-service
   name: go-service
+  namespace: atlas
 spec:
   ports:
-  - port: 60002
+  - port: 30002
     protocol: TCP
-    targetPort: 60002
+    targetPort: 30002
     # If you set the `spec.type` field to `NodePort` and you want a specific port number,
     # you can specify a value in the `spec.ports[*].nodePort` field.
-    nodePort: 60002
+    nodePort: 30002
   selector:
     app: go-service
   type: NodePort
@@ -24,6 +25,7 @@ metadata:
   labels:
     app: go-service
   name: go-service
+  namespace: atlas
 spec:
   replicas: 1
   selector:
@@ -41,7 +43,7 @@ spec:
         image: go-service
         name: go-service
         ports:
-        - containerPort: 60002
+        - containerPort: 30002
         imagePullPolicy: Never
         envFrom:
           - configMapRef:
