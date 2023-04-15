@@ -22,8 +22,8 @@ type MagicNumber struct {
 var DBObj *gorm.DB
 
 func main() {
-	port := getEnv("GO_SERVICE_PORT", "60002")
-	dbHost := getEnv("DB_SERVICE_HOST", "localhost")
+	port := getEnv("GO_SERVICE_PORT", "30002")
+	dbHost := getEnv("DB_SERVICE_HOST", "0.0.0.0")
 	dbUserName := getEnv("POSTGRES_USER", "postgres")
 	dbPassowrd := getEnv("POSTGRES_PASSWORD", "mysecretpassword")
 	dbName := getEnv("DB_SERVICE_NAME", "numbers")
@@ -35,7 +35,7 @@ func main() {
 
 	DBObj = db.SetupDB(dbHost, dbUserName, dbPassowrd, dbName, dbPort)
 
-	fmt.Println("Server at "+GO_SERVICE_PORT)
+	fmt.Println("Server at "+port)
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 
