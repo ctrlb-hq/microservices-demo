@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -18,9 +20,10 @@ type Number struct {
 }
 
 // DB set up
-func SetupDB() *gorm.DB {
+func SetupDB(host string, user string, password string, dbName string, port string) *gorm.DB {
 
-	dsn := "host=localhost user=postgres password=mysecretpassword dbname=numbers port=5432 sslmode=disable"
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", host, user, password, dbName, port)
+	// dsn := "host=localhost user=postgres password=mysecretpassword dbname=numbers port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
