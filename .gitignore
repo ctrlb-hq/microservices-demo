@@ -1,1 +1,3 @@
 src/frontend-python-service/venv
+.DS_Store
+src/.DS_Store
