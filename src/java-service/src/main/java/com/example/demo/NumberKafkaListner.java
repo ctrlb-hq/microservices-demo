@@ -15,8 +15,12 @@ public class NumberKafkaListner {
     
     @KafkaListener(topics = "${KAFKA_SERVICE_TOPIC}")
     public void onMessage(String message) throws JsonMappingException, JsonProcessingException {
+        String jsonMessage = message.replace('\'', '\"');
+        System.out.println("---------------------------------------------");
+        System.out.println(jsonMessage);
+        System.out.println("---------------------------------------------");
         ObjectMapper mapper = new ObjectMapper();
-        NumberEntity number = mapper.readValue(message, NumberEntity.class);
+        NumberEntity number = mapper.readValue(jsonMessage, NumberEntity.class);
         NumberEntity processedEntity = service.processNumber(number);
         service.setNumber(processedEntity);
     }

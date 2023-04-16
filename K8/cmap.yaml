@@ -15,9 +15,9 @@ data:
   KAFKA_SERVICE_HOST: kafka-service
   KAFKA_SERVICE_PORT: "9092"
   KAFKA_SERVICE_TOPIC: test
-  POSTGRES_DB: postgresdb
-  POSTGRES_USER: admin
-  POSTGRES_PASSWORD: psltest
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: mysecretpassword
+  DB_SERVICE_NAME: numbers
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -26,6 +26,6 @@ metadata:
   labels:
     app: postgres
 data:
-  POSTGRES_DB: postgresdb
-  POSTGRES_USER: admin
-  POSTGRES_PASSWORD: psltest
+  POSTGRES_DB: numbers
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: mysecretpassword

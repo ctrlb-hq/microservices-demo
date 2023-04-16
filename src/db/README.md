@@ -5,3 +5,8 @@
 4. docker exec -it f3fc12e65139 bash
 5. psql -U postgres
 6. create DATABASE numbers;
+7. \c numbers;
+8. CREATE TABLE numbers(
+   uuid varchar(100),
+   number integer
+);

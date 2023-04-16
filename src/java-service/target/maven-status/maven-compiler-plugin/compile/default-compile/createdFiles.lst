@@ -1,6 +1,0 @@
-com/example/demo/DemoApplication.class
-com/example/demo/NumberRepository.class
-com/example/demo/NumberService.class
-com/example/demo/NumberKafkaListner.class
-com/example/demo/NumberEntity.class
-com/example/demo/NumberResource.class

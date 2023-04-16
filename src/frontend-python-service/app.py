@@ -46,7 +46,7 @@ def result():
     PARAMS = {'uuid':uid}
 
     # sending get request and saving the response as response object
-    r = requests.get(url = f"{JAVA_SERVICE_HOST}:{JAVA_SERVICE_PORT}/numbers", params = PARAMS)
+    r = requests.get(url = f"http://{JAVA_SERVICE_HOST}:{JAVA_SERVICE_PORT}/numbers/{uid}", params = PARAMS)
     # extracting data in json format
     data = r.json()
     return str(f"Your response is: {data}")

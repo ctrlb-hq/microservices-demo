@@ -1,4 +1,5 @@
-FROM golang:1.20.1
+FROM openjdk:17-jdk-alpine
+COPY target/demo-0.0.1-SNAPSHOT.jar demo-0.0.1-SNAPSHOT.jar
 
 ENV PYTHON_SERVICE_HOST=0.0.0.0
 ENV PYTHON_SERVICE_PORT="30000"
@@ -15,13 +16,6 @@ ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=mysecretpassword
 ENV DB_SERVICE_NAME=numbers
 
-WORKDIR /app
+EXPOSE 30001
 
-COPY . ./
-RUN go mod download
-
-RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go-svc
-
-EXPOSE 30002
-
-CMD ["/go-svc"]
+ENTRYPOINT ["java","-jar","demo-0.0.1-SNAPSHOT.jar"]
