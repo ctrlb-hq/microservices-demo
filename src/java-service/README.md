@@ -15,12 +15,13 @@ export POSTGRES_USER=postgres
 export POSTGRES_PASSWORD=mysecretpassword
 export DB_SERVICE_NAME=numbers
 
-2. Install jdk20. sudo apt install openjdk-17-jdk
+2. Install jdk17. sudo apt install openjdk-17-jdk
 
 3. ./mvnw spring-boot:run
 
 
 ## Dockerize
-1. docker build -f Dockerfile -t java-service
-2. docker tag java-service dev0zklabs/atlas-demo-microservice:java-service
-3. docker push dev0zklabs/atlas-demo-microservice:java-service
+1. ./mvnw clean package
+2. docker build -f Dockerfile -t java-service
+3. docker tag java-service dev0zklabs/atlas-demo-microservice:java-service
+4. docker push dev0zklabs/atlas-demo-microservice:java-service
