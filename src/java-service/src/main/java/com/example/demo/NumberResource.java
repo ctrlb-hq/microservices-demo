@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 @RestController
 @RequestMapping("/numbers")
@@ -17,7 +19,7 @@ public class NumberResource {
     NumberService service;
 
     @GetMapping("/{id}")
-    public ResponseEntity<NumberEntity> getNumber(@PathVariable("id") String id) {
+    public ResponseEntity<NumberEntity> getNumber(@PathVariable("id") String id) throws JsonMappingException, JsonProcessingException {
         // Logic to retrieve number with given id
         NumberEntity number = service.getNumberById(id);
         if (number == null) {

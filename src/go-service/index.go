@@ -46,7 +46,7 @@ func fetchNumber(w http.ResponseWriter, r *http.Request) {
 
 	magicNumber := &MagicNumber{
 		UUID:   uuid,
-		Number: int32(number.Number),
+		Number: int32(number.Number)*2,
 	}
 
 	json.NewEncoder(w).Encode(magicNumber)

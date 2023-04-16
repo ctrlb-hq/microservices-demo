@@ -8,5 +8,7 @@
 7. \c numbers;
 8. CREATE TABLE numbers(
    uuid varchar(100),
-   number integer
+   number integer,
+   deleted_at DATE,
+   id integer
 );
