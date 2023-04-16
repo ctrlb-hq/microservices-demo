@@ -40,7 +40,7 @@ spec:
       containers:
       - args:
         - java-service
-        image: java-service
+        image: dev0zklabs/atlas-demo-microservice:java-service
         name: java-service
         ports:
         - containerPort: 30001

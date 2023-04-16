@@ -1,0 +1,335 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: "atlas"
+  labels:
+    name: "atlas"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: envs-config
+  namespace: atlas
+data:
+  PYTHON_SERVICE_HOST: python-frontend-service
+  PYTHON_SERVICE_PORT: "30000"
+  JAVA_SERVICE_HOST: java-service
+  JAVA_SERVICE_PORT: "30001"
+  GO_SERVICE_HOST: go-service
+  GO_SERVICE_PORT: "30002"
+  DB_SERVICE_HOST: db-service
+  DB_SERVICE_PORT: "5432"
+  DB_SERVICE_NAME: numbers
+  KAFKA_SERVICE_HOST: kafka-service
+  KAFKA_SERVICE_PORT: "9092"
+  KAFKA_SERVICE_TOPIC: test
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: mysecretpassword
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: atlas
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: numbers
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: mysecretpassword
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: zookeeper-service
+  name: zookeeper-service
+  namespace: atlas
+spec:
+  type: NodePort
+  ports:
+    - name: zookeeper-port
+      port: 2181
+      nodePort: 30181
+      targetPort: 2181
+  selector:
+    app: zookeeper
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: zookeeper
+  name: zookeeper
+  namespace: atlas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+        - image: wurstmeister/zookeeper
+          imagePullPolicy: IfNotPresent
+          name: zookeeper
+          ports:
+            - containerPort: 2181
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kafka-broker
+  name: kafka-service
+  namespace: atlas
+spec:
+  ports:
+  - port: 9092
+  selector:
+    app: kafka-broker
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kafka-broker
+  name: kafka-broker
+  namespace: atlas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-broker
+  template:
+    metadata:
+      labels:
+        app: kafka-broker
+    spec:
+      hostname: kafka-broker
+      containers:
+      - env:
+        - name: KAFKA_BROKER_ID
+          value: "1"
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: zookeeper-service:2181
+        - name: KAFKA_LISTENERS
+          value: PLAINTEXT://:9092
+        - name: KAFKA_ADVERTISED_LISTENERS
+          value: PLAINTEXT://kafka-service:9092
+        image: wurstmeister/kafka
+        imagePullPolicy: IfNotPresent
+        name: kafka-broker
+        ports:
+        - containerPort: 9092
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-service  # Sets Deployment name
+  namespace: atlas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-service
+  template:
+    metadata:
+      labels:
+        app: db-service
+    spec:
+      containers:
+        - name: db-service
+          image: dev0zklabs/atlas-demo-microservice:db-service
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 5432  # Exposes container port
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgredb
+      volumes:
+        - name: postgredb
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service # Sets service name
+  namespace: atlas
+  labels:
+    app: db-service # Labels and Selectors
+spec:
+  type: NodePort # Sets service type
+  ports:
+    - port: 5432 # Sets port to run the db-service application
+  selector:
+    app: db-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: python-frontend-service
+  name: python-frontend-service
+  namespace: atlas
+spec:
+  ports:
+  - port: 30000
+    protocol: TCP
+    targetPort: 30000
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.
+    nodePort: 30000
+  selector:
+    app: python-frontend-service
+  type: NodePort
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: python-frontend-service
+  name: python-frontend-service
+  namespace: atlas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-frontend-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: python-frontend-service
+      annotations:
+        instrumentation.opentelemetry.io/inject-python: "instrumentation/my-instrumentation"
+    spec:
+      containers:
+      - args:
+        - python-frontend-service
+        image: dev0zklabs/atlas-demo-microservice:python-frontend-service
+        name: python-frontend-service
+        ports:
+        - containerPort: 30000
+        imagePullPolicy: Always
+        envFrom:
+          - configMapRef:
+              name: envs-config
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: java-service
+  name: java-service
+  namespace: atlas
+spec:
+  ports:
+  - port: 30001
+    protocol: TCP
+    targetPort: 30001
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.
+    nodePort: 30001
+  selector:
+    app: java-service
+  type: NodePort
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: java-service
+  name: java-service
+  namespace: atlas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: java-service
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: "instrumentation/my-instrumentation"
+    spec:
+      containers:
+      - args:
+        - java-service
+        image: dev0zklabs/atlas-demo-microservice:java-service
+        name: java-service
+        ports:
+        - containerPort: 30001
+        imagePullPolicy: Always
+        envFrom:
+          - configMapRef:
+              name: envs-config
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: go-service
+  name: go-service
+  namespace: atlas
+spec:
+  ports:
+  - port: 30002
+    protocol: TCP
+    targetPort: 30002
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.
+    nodePort: 30002
+  selector:
+    app: go-service
+  type: NodePort
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: go-service
+  name: go-service
+  namespace: atlas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: go-service
+    spec:
+      containers:
+      - args:
+        - go-service
+        image: dev0zklabs/atlas-demo-microservice:go-service
+        name: go-service
+        ports:
+        - containerPort: 30002
+        imagePullPolicy: Always
+        envFrom:
+          - configMapRef:
+              name: envs-config
+        resources: {}
+status: {}

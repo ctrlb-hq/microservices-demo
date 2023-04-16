@@ -22,4 +22,5 @@ export DB_SERVICE_NAME=numbers
 
 ## Dockerize
 1. docker build -f Dockerfile -t java-service
-2. docker run -p 30001:30001 --network host --add-host 0.0.0.0:0.0.0.0 java-service
+2. docker tag java-service dev0zklabs/atlas-demo-microservice:java-service
+3. docker push dev0zklabs/atlas-demo-microservice:java-service

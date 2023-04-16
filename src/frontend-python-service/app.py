@@ -55,4 +55,4 @@ def result():
 # main driver function
 if __name__ == '__main__':
 
-	app.run(host=PYTHON_SERVICE_HOST, port=PYTHON_SERVICE_PORT)
+	app.run(host="0.0.0.0", port=PYTHON_SERVICE_PORT)

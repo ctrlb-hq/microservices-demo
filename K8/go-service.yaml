@@ -40,7 +40,7 @@ spec:
       containers:
       - args:
         - go-service
-        image: go-service
+        image: dev0zklabs/atlas-demo-microservice:go-service
         name: go-service
         ports:
         - containerPort: 30002

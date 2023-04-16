@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres  # Sets Deployment name
+  name: db-service  # Sets Deployment name
   namespace: atlas
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: db-service
   template:
     metadata:
       labels:
-        app: postgres
+        app: db-service
     spec:
       containers:
-        - name: postgres
-          image: postgres:10.1 # Sets Image
+        - name: db-service
+          image: dev0zklabs/atlas-demo-microservice:python-frontend-service
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5432  # Exposes container port
@@ -32,13 +32,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres # Sets service name
+  name: db-service # Sets service name
   namespace: atlas
   labels:
-    app: postgres # Labels and Selectors
+    app: db-service # Labels and Selectors
 spec:
   type: NodePort # Sets service type
   ports:
-    - port: 5432 # Sets port to run the postgres application
+    - port: 5432 # Sets port to run the db-service application
   selector:
-    app: postgres
+    app: db-service
