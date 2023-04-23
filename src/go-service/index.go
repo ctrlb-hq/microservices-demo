@@ -63,7 +63,7 @@ func checkPythonStatus(w http.ResponseWriter, r *http.Request) {
 	pythonSvcHost := getEnv("PYTHON_SERVICE_HOST", "0.0.0.0")
 	pythonSvcPort := getEnv("PYTHON_SERVICE_PORT", "30000")
 
-	pythonEndpoint := fmt.Sprintf("http://%s:%s/ping", pythonSvcHost, pythonSvcPort)
+	pythonEndpoint := fmt.Sprintf("http://%s:%s/helloGo", pythonSvcHost, pythonSvcPort)
 	resp, err := http.Get(pythonEndpoint)
 	if err != nil {
 		log.Fatalln(err)

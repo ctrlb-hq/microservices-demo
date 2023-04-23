@@ -63,19 +63,6 @@ def helloGo():
     # sending get request and saving the response as response object
     r = requests.get(url = f"http://{GO_SERVICE_HOST}:{GO_SERVICE_PORT}/ping/")
     # extracting data in json format
-    print(r)
-    return str(f"Your response is: {r.text}")
-
-"""
-This function calls the Java service endpoint /numbers with uuid parameter as obtained here
-Then prints the result.
-"""
-@app.route('/ping')
-def ping():
-    # sending get request and saving the response as response object
-    r = requests.get(url = f"http://{GO_SERVICE_HOST}:{GO_SERVICE_PORT}/ping/")
-    # extracting data in json format
-    print(r)
     return str(f"Your response is: {r.text}")
 
 # main driver function

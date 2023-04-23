@@ -25,3 +25,6 @@ export DB_SERVICE_NAME=numbers
 2. docker build -f Dockerfile -t java-service
 3. docker tag java-service dev0zklabs/atlas-demo-microservice:java-service
 4. docker push dev0zklabs/atlas-demo-microservice:java-service
+
+### Instrumentation
+opentelemetry auto-instrumentation
