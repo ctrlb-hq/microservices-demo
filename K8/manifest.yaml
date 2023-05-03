@@ -281,11 +281,15 @@ spec:
         resources: {}
 status: {}
 ---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: go
+  namespace: atlas
+---
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: go-service
   name: go-service
   namespace: atlas
 spec:
@@ -295,19 +299,13 @@ spec:
     targetPort: 30002
     # If you set the `spec.type` field to `NodePort` and you want a specific port number,
     # you can specify a value in the `spec.ports[*].nodePort` field.
-    nodePort: 30002
   selector:
     app: go-service
-  type: NodePort
-status:
-  loadBalancer: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: go-service
-  name: go-service
+  name: go
   namespace: atlas
 spec:
   replicas: 1
@@ -320,16 +318,104 @@ spec:
       labels:
         app: go-service
     spec:
+      serviceAccountName: go
+      shareProcessNamespace: true
+      terminationGracePeriodSeconds: 0
+      initContainers:
+        - name: copy-launcher
+          image: keyval/launcher:v0.1
+          command:
+            - cp
+            - -a
+            - /kv-launcher/.
+            - /odigos-launcher/
+          volumeMounts:
+            - name: launcherdir
+              mountPath: /odigos-launcher
       containers:
-      - args:
-        - go-service
-        image: dev0zklabs/atlas-demo-microservice:go-service
-        name: go-service
-        ports:
-        - containerPort: 30002
-        imagePullPolicy: Always
-        envFrom:
-          - configMapRef:
-              name: envs-config
-        resources: {}
+        - args:
+          - go-service
+          image: dev0zklabs/atlas-demo-microservice:go-service
+          name: go-service
+          command:
+            - /odigos-launcher/launch
+            - /root/go-service
+          volumeMounts:
+            - mountPath: /odigos-launcher
+              name: launcherdir
+          ports:
+          - containerPort: 30002
+          resources:
+            requests:
+              cpu: 100m
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: envs-config
+          resources: {}
+        - name: emojivoto-emoji-instrumentation
+          image: dev0zklabs/atlas-demo-microservice:go-otel-context-propagation
+          env:
+            - name: OTEL_TARGET_EXE
+              value: /root/go-service
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "jaeger:4317"
+            - name: OTEL_SERVICE_NAME
+              value: "go-service"
+            - name: OTEL_PROPAGATORS
+              value: "tracecontext,baggage"
+          securityContext:
+            runAsUser: 0
+            capabilities:
+              add:
+                - SYS_PTRACE
+            privileged: true
+          volumeMounts:
+            - mountPath: /sys/kernel/debug
+              name: kernel-debug
+      volumes:
+        - name: launcherdir
+          emptyDir: {}
+        - name: kernel-debug
+          hostPath:
+            path: /sys/kernel/debug
 status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jaeger
+  name: jaeger
+  namespace: atlas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger
+  template:
+    metadata:
+      labels:
+        app: jaeger
+    spec:
+      containers:
+      - image: jaegertracing/opentelemetry-all-in-one:latest
+        name: opentelemetry-all-in-one
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: jaeger
+  name: jaeger
+  namespace: atlas
+spec:
+  ports:
+  - name: grpc
+    port: 4317
+    targetPort: 4317
+  - name: ui
+    port: 16686
+    targetPort: 16686
+  selector:
+    app: jaeger
