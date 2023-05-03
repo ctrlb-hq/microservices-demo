@@ -21,9 +21,10 @@ https://www.notion.so/dev0ai/Tutorial-Instrumenting-go-applications-b9793c392769
 1. Endpoint: python-service:30000/?number=10.  
     a. Puts the request on kafka queue with this number.  
     b. Returns a uuid to fetch result.  
-2. Endpoint: python-service:30000/getResult?uuid=3f641773-4d54-44ee-b2eb-290b215116b7.  
-    a. Calls java-service:30001/numbers/{uid} and asks it to get the result.  
-    b. Returns square of the input number multiplied by 2.  
+2. Endpoint: python-service:30000/result
+    a. form body must have uuid=3f641773-4d54-44ee-b2eb-290b215116b7.  
+    b. Calls java-service:30001/numbers/{uid} and asks it to get the result.  
+    c. Returns square of the input number multiplied by 2.  
 3. Endpoint: python-service:30000/helloGo  
     a. Calls go-service:30002/ping/  
 
@@ -48,3 +49,6 @@ https://www.notion.so/dev0ai/Tutorial-Instrumenting-go-applications-b9793c392769
     a. Simply returns pong  
 3. Endpoint: go-service:30002/pingPython  
     a. Calls python-service:30000/helloGo  
+
+### node-service
+TODO - Add documentation Adarsh

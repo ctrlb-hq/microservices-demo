@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post">
+    <input type="text" name="number"
+           placeholder="Enter a number"
+           value="{{ request.form['number'] }}">
+     </input> 
+     <button type="submit">Submit</button>
+ </form>
+ <div>
+     {% if uuid == "NULL": %}
+         <p>Waiting for you to submit the form</p>
+     {% else %}
+         <h3>Your request has been registered against {{ uuid }}</h3>
+     {% endif %}
+ </div>
+{% endblock %}

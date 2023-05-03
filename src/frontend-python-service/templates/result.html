@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post">
+    <input type="text" name="uid"
+           placeholder="Enter the UID to fetch number"
+           value="{{ request.form['uuid'] }}">
+     </input> 
+     <button type="submit">Submit UID</button>
+ </form>
+ <div>
+     {% if data == "NULL": %}
+         <p>Waiting for you to submit the form</p>
+     {% else %}
+         <h3>Requested Data {{ data }}</h3>
+     {% endif %}
+ </div>
+{% endblock %}
