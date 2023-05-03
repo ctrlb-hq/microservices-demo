@@ -53,13 +53,13 @@ Then prints the result.
 def result():
 	if request.method == 'POST':
 		uid = request.form['uid']
-	if not uid:
-		flash('UID is required')
-	else:
-		params = {'uuid': uid}
-		resp = requests.get(url = f"http://{JAVA_SERVICE_HOST}:{JAVA_SERVICE_PORT}/numbers/{uid}", params = params)
-		data = resp.json()
-		return render_template('result.html', data=data)
+		if not uid:
+			flash('UID is required')
+		else:
+			params = {'uuid': uid}
+			resp = requests.get(url = f"http://{JAVA_SERVICE_HOST}:{JAVA_SERVICE_PORT}/numbers/{uid}", params = params)
+			data = resp.json()
+			return render_template('result.html', data=data)
 	return render_template('result.html', data="NULL")
 
 """
