@@ -12,8 +12,11 @@ Create go instrumentation docker image
 https://www.notion.so/dev0ai/Tutorial-Instrumenting-go-applications-b9793c39276946e9978ec2087f9d670a?pvs=4#a2a093bb9cfb45398e40d965c7dc2ced
 ```
 ### Main install
-`kubectl apply -f K8/manifest.yaml`
-`kubectl port-forward -n atlas service/python-frontend-service 30000 --address=0.0.0.0`
+Create docker images for each service by looking at their respective READMEs  
+```
+kubectl apply -f K8/manifest.yaml
+kubectl port-forward -n atlas service/python-frontend-service 30000 --address=0.0.0.0
+```
 
 ## Services
 
