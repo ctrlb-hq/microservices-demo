@@ -30,7 +30,7 @@ public class NumberService {
 
     public NumberEntity processNumber(NumberEntity number) {
         int num = number.getNumber();
-        number.setNumber(num * num);
+        number.setNumber(num * num * num);
         return number;
     }
 }
