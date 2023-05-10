@@ -19,12 +19,15 @@ public class NumberResource {
     NumberService service;
 
     @GetMapping("/{id}")
-    public ResponseEntity<NumberEntity> getNumber(@PathVariable("id") String id) throws JsonMappingException, JsonProcessingException {
+    public ResponseEntity<NumberEntity> getNumber(@PathVariable("id") String id) throws Exception, JsonMappingException, JsonProcessingException {
         // Logic to retrieve number with given id
         NumberEntity number = service.getNumberById(id);
         if (number == null) {
             return ResponseEntity.notFound().build();
-        } else {
+        } else if(number.getNumber() <= 0){
+            throw new Exception("Cannot handle negative numbers!");
+        }
+        else {
             return ResponseEntity.ok(number);
         }
     }
